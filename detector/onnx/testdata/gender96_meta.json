@@ -1,0 +1,16 @@
+{
+ "model": "face_detect_genderage.onnx",
+ "input": "gender96",
+ "shape": [
+  1,
+  3,
+  96,
+  96
+ ],
+ "outputs": {
+  "fc1": [
+   1,
+   3
+  ]
+ }
+}
