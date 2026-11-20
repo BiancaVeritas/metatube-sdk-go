@@ -35,8 +35,10 @@ const (
 	// scrfdConfidence is the score floor used inside the decoder. It is a coarse
 	// cut only; the caller applies the configured threshold afterwards.
 	scrfdConfidence = 0.05
-	// genderFemale is the index of the female logit in the 3-way head.
+	// genderFemale and genderMale are the two logits of the 3-way head; the third
+	// output is the age estimate and carries no gender meaning.
 	genderFemale = 0
+	genderMale   = 1
 )
 
 // faceBox is a detected face in source-image pixels.

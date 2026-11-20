@@ -45,16 +45,14 @@ func isFemale(gender *onnx.Model, img image.Image, box faceBox) (female bool, ok
 		return false, false
 	}
 	for _, t := range out {
-		if t.Len() < 3 {
+		if t.Len() < 2 {
 			continue
 		}
-		best, bestIdx := t.Data[0], 0
-		for i := 1; i < 3; i++ {
-			if t.Data[i] > best {
-				best, bestIdx = t.Data[i], i
-			}
-		}
-		return bestIdx == genderFemale, true
+		// The head emits three values but only the first two are the gender logits:
+		// index 0 is female, index 1 is male. The third slot is the age estimate and
+		// taking argmax over all three would read it as a gender — on real faces it
+		// often dominates, which silently turns every woman into "not female".
+		return t.Data[genderFemale] > t.Data[genderMale], true
 	}
 	return false, false
 }
