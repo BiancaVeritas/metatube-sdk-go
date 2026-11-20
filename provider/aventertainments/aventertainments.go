@@ -173,6 +173,13 @@ func (ave *AVE) NormalizeMovieKeyword(keyword string) string {
 }
 
 func (ave *AVE) SearchMovie(keyword string) (results []*model.MovieSearchResult, err error) {
+	// Offline table first: the search page answers with a human verification
+	// challenge, while the detail page does not. A hit skips the search page
+	// entirely; only a miss goes through it.
+	if result, ok := ave.searchMovieFromIndex(keyword); ok {
+		return []*model.MovieSearchResult{result}, nil
+	}
+
 	c := ave.ClonedCollector()
 
 	c.OnXML(`//div[@class="single-slider-product grid-view-product"]`, func(e *colly.XMLElement) {

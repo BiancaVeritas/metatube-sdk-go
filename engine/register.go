@@ -9,6 +9,7 @@ import (
 	_ "github.com/metatube-community/metatube-sdk-go/provider/c0930"
 	_ "github.com/metatube-community/metatube-sdk-go/provider/caribbeancom"
 	_ "github.com/metatube-community/metatube-sdk-go/provider/caribbeancompr"
+	_ "github.com/metatube-community/metatube-sdk-go/provider/d2pass"
 	_ "github.com/metatube-community/metatube-sdk-go/provider/dahlia"
 	_ "github.com/metatube-community/metatube-sdk-go/provider/duga"
 	_ "github.com/metatube-community/metatube-sdk-go/provider/faleno"
