@@ -4,6 +4,11 @@ concurrency:
   group: docker-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 推镜像需要 packages:write; 不声明时 GITHUB_TOKEN 只有读权限, 推送会被拒.
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches:
