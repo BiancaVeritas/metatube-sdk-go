@@ -31,7 +31,10 @@ func FindPrimaryFaceAxisRatio(img image.Image, ratio float64, advanced bool, deb
 		return 0, false
 	}
 
-	working := resizedForDetection(img, maxImageWidth)
+	// No pre-resize here: scrfdInput already scales the long edge to scrfdSide and
+	// pads the rest. Resizing twice would resample every cover differently from the
+	// reference implementation and shift every box.
+	working := img
 	faces := runSCRFD(working, defaultConfidence)
 	if len(faces) == 0 && advanced {
 		// A portrait cover can put the subject's face off-axis. Retrying on rotated
@@ -45,21 +48,20 @@ func FindPrimaryFaceAxisRatio(img image.Image, ratio float64, advanced bool, deb
 		return 0, false
 	}
 
-	// Scale the boxes back to the original image coordinates.
-	scale := float64(bounds.Dx()) / float64(working.Bounds().Dx())
-
-	face, ok := pickSubjectFace(working, faces)
+	// The boxes are already in source pixels: scrfdInput reports the scale it
+	// applied and the decoder divides it back out.
+	face, ok := pickSubjectFace(img, faces)
 	if !ok {
 		return 0, false
 	}
-	cx := (face.X1 + face.X2) / 2 * scale
+	cx := (face.X1 + face.X2) / 2
 
 	axis := dominantAxis(bounds.Dx(), bounds.Dy(), ratio)
 	switch axis {
 	case 0:
 		return clampFraction(cx / float64(bounds.Dx())), true
 	default:
-		cy := (face.Y1 + face.Y2) / 2 * scale
+		cy := (face.Y1 + face.Y2) / 2
 		return clampFraction(cy / float64(bounds.Dy())), true
 	}
 }
