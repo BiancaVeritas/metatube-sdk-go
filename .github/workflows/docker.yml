@@ -10,6 +10,8 @@ on:
       - 'main'
     tags:
       - '*'
+  # 手动触发: fork 上首次启用 Actions 后, 用它立刻构建一次, 不必等下一次 push.
+  workflow_dispatch:
 
 jobs:
 
@@ -46,7 +48,7 @@ jobs:
           echo "version=$(git describe --abbrev=0 --tags HEAD | cut -d'v' -f 2)" >> $GITHUB_OUTPUT
 
       - name: Build and Push (dev)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         uses: docker/build-push-action@v7
         with:
           context: .
