@@ -1,6 +1,6 @@
 services:
   metatube:
-    image: ghcr.io/metatube-community/metatube-server:latest
+    image: ghcr.io/biancaveritas/metatube-sdk-go:latest
     container_name: metatube
     ports:
       - "8080:8080"
